@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses - FarmTrack</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/design-system.css" rel="stylesheet">
+</head>
+<body>
+    <div class="layout-container">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="layout-sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🌾</div>
+                <div>
+                    <div class="sidebar-logo-text">FarmTrack</div>
+                    <div class="sidebar-logo-subtext">Farm Management</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="crops.html" class="nav-item">
+                    <i class="fas fa-leaf"></i>
+                    <span>Crops</span>
+                </a>
+                <a href="expenses.html" class="nav-item active">
+                    <i class="fas fa-receipt"></i>
+                    <span>Expenses</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="layout-content">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <i class="fas fa-bars" id="sidebarToggle" style="display: none; cursor: pointer; font-size: 1.5rem; color: var(--color-primary);"></i>
+                    <i class="fas fa-seedling"></i>
+                    FarmTrack
+                </div>
+                <div class="navbar-right">
+                    <div class="user-greeting">
+                        Welcome, <strong id="userGreeting"></strong>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Page Header -->
+                <div style="margin-bottom: var(--spacing-2xl); display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h1 style="font-size: 2.25rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--spacing-md);">
+                            <i class="fas fa-receipt" style="color: var(--color-primary); margin-right: var(--spacing-md);"></i>
+                            Expenses
+                        </h1>
+                        <p style="color: var(--color-text-secondary); margin: 0;">Track and manage your farm expenses</p>
+                    </div>
+                    <button class="btn btn-primary" id="toggleFormBtn" style="white-space: nowrap;">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </button>
+                </div>
+
+                <!-- Add Expense Form (Initially Hidden) -->
+                <div class="card mb-4" id="addExpenseCard" style="display: none;">
+                    <div class="card-header">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>Add New Expense</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="expenseForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Amount (KSh) <span class="required">*</span></label>
+                                    <input type="number" class="form-control" id="amount" placeholder="0.00" step="0.01" min="0" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Category <span class="required">*</span></label>
+                                    <select class="form-select" id="category" required>
+                                        <option value="">Select a category</option>
+                                        <option value="Seeds">🌱 Seeds</option>
+                                        <option value="Labor">👷 Labor</option>
+                                        <option value="Fertilizer">🥗 Fertilizer</option>
+                                        <option value="Pesticide">🐛 Pesticide</option>
+                                        <option value="Water">💧 Water</option>
+                                        <option value="Equipment">🔧 Equipment</option>
+                                        <option value="Transport">🚛 Transport</option>
+                                        <option value="Other">📦 Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Date <span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="date" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" id="description" placeholder="Optional notes">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: var(--spacing-md);">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Add Expense
+                                </button>
+                                <button type="button" class="btn btn-outline" id="cancelBtn">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Category Summary -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie"></i>
+                                <h3>Expense Breakdown by Category</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="categoryBreakdown" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expenses Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-table"></i>
+                        <h3>All Expenses</h3>
+                    </div>
+                    <div class="card-body" id="expensesTableContainer">
+                        <div class="table-container">
+                            <table id="expensesTable">
+                                <thead>
+                                    <tr>
+                                        <th>📅 Date</th>
+                                        <th>📂 Category</th>
+                                        <th>💰 Amount</th>
+                                        <th>📝 Description</th>
+                                        <th>⚙️ Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expensesTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="emptyState" style="display: none;">
+                            <div class="empty-state-icon"><i class="fas fa-receipt"></i></div>
+                            <div class="empty-state-title">No expenses yet</div>
+                            <div class="empty-state-text">Start tracking your farm expenses</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase-app/10.0.0/firebase-app.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-auth.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-firestore.min.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/expenses.js"></script>
+
+    <script>
+        // Form Toggle
+        document.getElementById('toggleFormBtn').addEventListener('click', () => {
+            const card = document.getElementById('addExpenseCard');
+            card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('addExpenseCard').style.display = 'none';
+            document.getElementById('expenseForm').reset();
+        });
+
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (window.innerWidth <= 768) {
+            sidebarToggle.style.display = 'block';
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                sidebarToggle.style.display = 'block';
+            } else {
+                sidebarToggle.style.display = 'none';
+                sidebar.classList.remove('active');
+            }
+        });
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

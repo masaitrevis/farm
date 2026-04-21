@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crops - FarmTrack</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/design-system.css" rel="stylesheet">
+</head>
+<body>
+    <div class="layout-container">
+        <!-- ========== SIDEBAR ========== -->
+        <aside class="layout-sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🌾</div>
+                <div>
+                    <div class="sidebar-logo-text">FarmTrack</div>
+                    <div class="sidebar-logo-subtext">Farm Management</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="crops.html" class="nav-item active">
+                    <i class="fas fa-leaf"></i>
+                    <span>Crops</span>
+                </a>
+                <a href="expenses.html" class="nav-item">
+                    <i class="fas fa-receipt"></i>
+                    <span>Expenses</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- ========== MAIN CONTENT ========== -->
+        <div class="layout-content">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <i class="fas fa-bars" id="sidebarToggle" style="display: none; cursor: pointer; font-size: 1.5rem; color: var(--color-primary);"></i>
+                    <i class="fas fa-seedling"></i>
+                    FarmTrack
+                </div>
+                <div class="navbar-right">
+                    <div class="user-greeting">
+                        Welcome, <strong id="userGreeting"></strong>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Page Header -->
+                <div style="margin-bottom: var(--spacing-2xl); display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h1 style="font-size: 2.25rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--spacing-md);">
+                            <i class="fas fa-leaf" style="color: var(--color-primary); margin-right: var(--spacing-md);"></i>
+                            Crops
+                        </h1>
+                        <p style="color: var(--color-text-secondary); margin: 0;">Manage and track your crops</p>
+                    </div>
+                    <button class="btn btn-primary" id="toggleFormBtn" style="white-space: nowrap;">
+                        <i class="fas fa-plus"></i> Add Crop
+                    </button>
+                </div>
+
+                <!-- Add Crop Form (Initially Hidden) -->
+                <div class="card mb-4" id="addCropCard" style="display: none;">
+                    <div class="card-header">
+                        <i class="fas fa-seedling"></i>
+                        <h3>Add New Crop</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="cropForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Crop Name <span class="required">*</span></label>
+                                    <input type="text" class="form-control" id="cropName" placeholder="e.g., Maize, Beans, Tomatoes" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Expected Yield <span class="required">*</span></label>
+                                    <input type="number" class="form-control" id="expectedYield" placeholder="e.g., 50" step="0.01" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Planting Date <span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="plantingDate" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Harvest Date <span class="required">*</span></label>
+                                    <input type="date" class="form-control" id="harvestDate" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Expected Revenue (KSh) <span class="required">*</span></label>
+                                    <input type="number" class="form-control" id="expectedRevenue" placeholder="0.00" step="0.01" min="0" required>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: var(--spacing-md);">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Add Crop
+                                </button>
+                                <button type="button" class="btn btn-outline" id="cancelBtn">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Crops Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-table"></i>
+                        <h3>Your Crops</h3>
+                    </div>
+                    <div class="card-body" id="cropsTableContainer">
+                        <div class="table-container">
+                            <table id="cropsTable">
+                                <thead>
+                                    <tr>
+                                        <th>🌱 Crop Name</th>
+                                        <th>📅 Planted</th>
+                                        <th>🎯 Harvest</th>
+                                        <th>📊 Days Left</th>
+                                        <th>💰 Expected Revenue</th>
+                                        <th>📈 Yield</th>
+                                        <th>Status</th>
+                                        <th>⚙️ Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cropsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="emptyState" style="display: none;">
+                            <div class="empty-state-icon"><i class="fas fa-leaf"></i></div>
+                            <div class="empty-state-title">No crops yet</div>
+                            <div class="empty-state-text">Start by adding your first crop to track</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase-app/10.0.0/firebase-app.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-auth.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-firestore.min.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/crops.js"></script>
+
+    <script>
+        // Form Toggle
+        document.getElementById('toggleFormBtn').addEventListener('click', () => {
+            const card = document.getElementById('addCropCard');
+            card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            document.getElementById('addCropCard').style.display = 'none';
+            document.getElementById('cropForm').reset();
+        });
+
+        // Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (window.innerWidth <= 768) {
+            sidebarToggle.style.display = 'block';
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                sidebarToggle.style.display = 'block';
+            } else {
+                sidebarToggle.style.display = 'none';
+                sidebar.classList.remove('active');
+            }
+        });
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

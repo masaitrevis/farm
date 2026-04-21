@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FarmTrack</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/design-system.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-card {
+            background: var(--color-white);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-2xl);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            color: var(--color-text-light);
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        .auth-logo {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .auth-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .auth-subtitle {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+
+        .auth-body {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+        }
+
+        .auth-heading {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .form-divider {
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+            color: var(--color-text-tertiary);
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            content: '';
+            display: inline-block;
+            width: 40%;
+            height: 1px;
+            background: var(--color-border);
+            vertical-align: middle;
+            margin: 0 var(--spacing-sm);
+        }
+
+        .auth-link-section {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .auth-link-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .auth-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: var(--font-weight-semibold);
+            transition: all var(--transition-base);
+        }
+
+        .auth-link:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        .error-alert {
+            animation: slideIn var(--transition-base);
+        }
+
+        @media (max-width: 480px) {
+            .auth-body {
+                padding: var(--spacing-lg);
+            }
+
+            .auth-header {
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
+
+            .auth-title {
+                font-size: var(--font-size-xl);
+            }
+
+            .auth-logo {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="auth-logo">🌾</div>
+                <h1 class="auth-title">FarmTrack</h1>
+                <p class="auth-subtitle">Farm Management System</p>
+            </div>
+
+            <!-- Body -->
+            <div class="auth-body">
+                <h2 class="auth-heading">Sign In</h2>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="alert alert-danger error-alert" style="display: none;">
+                    <i class="fas fa-exclamation-circle" style="margin-right: var(--spacing-sm);"></i>
+                    <span id="errorText"></span>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            <i class="fas fa-envelope" style="margin-right: var(--spacing-sm);"></i>
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            placeholder="you@example.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="fas fa-lock" style="margin-right: var(--spacing-sm);"></i>
+                            Password
+                        </label>
+                        <div style="position: relative;">
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                placeholder="••••••••"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" id="passwordToggle" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--color-text-secondary); cursor: pointer;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                        <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                            <input type="checkbox" id="rememberMe">
+                            <span style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Remember me</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="form-divider">OR</div>
+
+                <!-- Sign Up Link -->
+                <div class="auth-link-section">
+                    <p class="auth-link-text">
+                        Don't have an account?
+                        <a href="register.html" class="auth-link">Create one</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p style="text-align: center; color: rgba(255, 255, 255, 0.7); margin-top: var(--spacing-2xl); font-size: var(--font-size-xs);">
+            © 2025 FarmTrack. All rights reserved.
+        </p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase-app/10.0.0/firebase-app.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-auth.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.0.0/firebase-firestore.min.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        class LoginPage {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        window.location.href = 'index.html';
+                    }
+                });
+
+                this.setupFormListeners();
+                this.setupPasswordToggle();
+            }
+
+            setupFormListeners() {
+                const form = document.getElementById('loginForm');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.handleLogin(e));
+                }
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    this.showError('Please fill in all fields');
+                    return;
+                }
+
+                const btn = e.target.querySelector('button[type="submit"]');
+                const originalHTML = btn.innerHTML;
+
+                try {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="spinner" style="display: inline-block; width: 16px; height: 16px; margin-right: var(--spacing-sm);"></span>Signing in...';
+
+                    const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                    console.log('✓ User logged in:', userCredential.user.email);
+                    window.location.href = 'index.html';
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showError(this.getErrorMessage(error.code));
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            }
+
+            setupPasswordToggle() {
+                const passwordInput = document.getElementById('password');
+                const toggleBtn = document.getElementById('passwordToggle');
+
+                if (toggleBtn && passwordInput) {
+                    toggleBtn.addEventListener('click', () => {
+                        const isPassword = passwordInput.type === 'password';
+                        passwordInput.type = isPassword ? 'text' : 'password';
+                        toggleBtn.innerHTML = isPassword
+                            ? '<i class="fas fa-eye-slash"></i>'
+                            : '<i class="fas fa-eye"></i>';
+                    });
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+                if (errorDiv && errorText) {
+                    errorText.textContent = message;
+                    errorDiv.style.display = 'flex';
+                    setTimeout(() => {
+                        errorDiv.style.display = 'none';
+                    }, 5000);
+                }
+            }
+
+            getErrorMessage(code) {
+                const messages = {
+                    'auth/user-not-found': 'No account found with this email address',
+                    'auth/wrong-password': 'Incorrect password',
+                    'auth/invalid-email': 'Invalid email address',
+                    'auth/user-disabled': 'This account has been disabled',
+                    'auth/too-many-requests': 'Too many login attempts. Please try again later.',
+                };
+                return messages[code] || 'Login failed. Please try again.';
+            }
+        }
+
+        const loginPage = new LoginPage();
+    </script>
+</body>
+</html>
